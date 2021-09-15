@@ -72,10 +72,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Malte\source\repos\SWBF.CLASSIC-Server-Hook\packages\EasyHookNativePackage.2.7.7097\build\native\lib\Win32\v141\Debug</LibraryPath>
+    <LibraryPath>C:\Users\Malte\source\repos\SWBF.CLASSIC-Server-Hook\Coms\SWBF-Communicator\install\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Malte\source\repos\SWBF.CLASSIC-Server-Hook\packages\EasyHookNativePackage.2.7.7097\build\native\lib\Win32\v141\Debug</LibraryPath>
+    <IncludePath>D:\protobuf\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\protobuf\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -93,7 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>EasyHook32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>EasyHook32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libprotobuf.lib;libprotoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,9 +144,125 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SWBF-Communicator.cpp" />
+    <ClCompile Include="swbf.pb.cc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EasyHook32.dll" />
+    <None Include="install\include\google\protobuf\generated_message_tctable_impl.inc" />
+    <None Include="install\include\google\protobuf\port_def.inc" />
+    <None Include="install\include\google\protobuf\port_undef.inc" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="install\include\google\protobuf\any.h" />
+    <ClInclude Include="install\include\google\protobuf\any.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\api.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\arena.h" />
+    <ClInclude Include="install\include\google\protobuf\arenastring.h" />
+    <ClInclude Include="install\include\google\protobuf\arena_impl.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\code_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\command_line_interface.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\cpp\cpp_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\csharp\csharp_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\csharp\csharp_names.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\importer.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_kotlin_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_names.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\js\js_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\js\well_known_types_embed.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\objectivec\objectivec_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\objectivec\objectivec_helpers.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\parser.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\php\php_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\plugin.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\plugin.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\python\python_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\compiler\ruby\ruby_generator.h" />
+    <ClInclude Include="install\include\google\protobuf\descriptor.h" />
+    <ClInclude Include="install\include\google\protobuf\descriptor.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\descriptor_database.h" />
+    <ClInclude Include="install\include\google\protobuf\duration.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\dynamic_message.h" />
+    <ClInclude Include="install\include\google\protobuf\empty.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\extension_set.h" />
+    <ClInclude Include="install\include\google\protobuf\extension_set_inl.h" />
+    <ClInclude Include="install\include\google\protobuf\field_access_listener.h" />
+    <ClInclude Include="install\include\google\protobuf\field_mask.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_enum_reflection.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_enum_util.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_message_reflection.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_message_table_driven.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_message_tctable_decl.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_message_tctable_impl.h" />
+    <ClInclude Include="install\include\google\protobuf\generated_message_util.h" />
+    <ClInclude Include="install\include\google\protobuf\has_bits.h" />
+    <ClInclude Include="install\include\google\protobuf\implicit_weak_message.h" />
+    <ClInclude Include="install\include\google\protobuf\io\coded_stream.h" />
+    <ClInclude Include="install\include\google\protobuf\io\gzip_stream.h" />
+    <ClInclude Include="install\include\google\protobuf\io\io_win32.h" />
+    <ClInclude Include="install\include\google\protobuf\io\printer.h" />
+    <ClInclude Include="install\include\google\protobuf\io\strtod.h" />
+    <ClInclude Include="install\include\google\protobuf\io\tokenizer.h" />
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream.h" />
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream_impl.h" />
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream_impl_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\map.h" />
+    <ClInclude Include="install\include\google\protobuf\map_entry.h" />
+    <ClInclude Include="install\include\google\protobuf\map_entry_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\map_field.h" />
+    <ClInclude Include="install\include\google\protobuf\map_field_inl.h" />
+    <ClInclude Include="install\include\google\protobuf\map_field_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\map_type_handler.h" />
+    <ClInclude Include="install\include\google\protobuf\message.h" />
+    <ClInclude Include="install\include\google\protobuf\message_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\metadata.h" />
+    <ClInclude Include="install\include\google\protobuf\metadata_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\parse_context.h" />
+    <ClInclude Include="install\include\google\protobuf\port.h" />
+    <ClInclude Include="install\include\google\protobuf\reflection.h" />
+    <ClInclude Include="install\include\google\protobuf\reflection_ops.h" />
+    <ClInclude Include="install\include\google\protobuf\repeated_field.h" />
+    <ClInclude Include="install\include\google\protobuf\service.h" />
+    <ClInclude Include="install\include\google\protobuf\source_context.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\struct.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\bytestream.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\callback.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\casts.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\common.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\hash.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\logging.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\macros.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\map_util.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\mutex.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\once.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\platform_macros.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\port.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\status.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\stl_util.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\stringpiece.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\strutil.h" />
+    <ClInclude Include="install\include\google\protobuf\stubs\template_util.h" />
+    <ClInclude Include="install\include\google\protobuf\text_format.h" />
+    <ClInclude Include="install\include\google\protobuf\timestamp.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\type.pb.h" />
+    <ClInclude Include="install\include\google\protobuf\unknown_field_set.h" />
+    <ClInclude Include="install\include\google\protobuf\util\delimited_message_util.h" />
+    <ClInclude Include="install\include\google\protobuf\util\field_comparator.h" />
+    <ClInclude Include="install\include\google\protobuf\util\field_mask_util.h" />
+    <ClInclude Include="install\include\google\protobuf\util\json_util.h" />
+    <ClInclude Include="install\include\google\protobuf\util\message_differencer.h" />
+    <ClInclude Include="install\include\google\protobuf\util\time_util.h" />
+    <ClInclude Include="install\include\google\protobuf\util\type_resolver.h" />
+    <ClInclude Include="install\include\google\protobuf\util\type_resolver_util.h" />
+    <ClInclude Include="install\include\google\protobuf\wire_format.h" />
+    <ClInclude Include="install\include\google\protobuf\wire_format_lite.h" />
+    <ClInclude Include="install\include\google\protobuf\wrappers.pb.h" />
+    <ClInclude Include="swbf.pb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="EasyHook32.lib" />
+    <Library Include="libprotobuf.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

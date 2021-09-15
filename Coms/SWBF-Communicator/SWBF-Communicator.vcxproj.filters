@@ -13,13 +13,350 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Protos">
+      <UniqueIdentifier>{5f9faf27-11af-4e63-ac14-07578f9abd5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SWBF-Communicator.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="swbf.pb.cc">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="install\include\google\protobuf\generated_message_tctable_impl.inc">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="install\include\google\protobuf\port_def.inc">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="install\include\google\protobuf\port_undef.inc">
+      <Filter>Headerdateien</Filter>
+    </None>
+    <None Include="EasyHook32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="install\include\google\protobuf\any.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\any.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\api.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\arena.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\arenastring.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\arena_impl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\code_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\command_line_interface.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\cpp\cpp_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\csharp\csharp_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\csharp\csharp_names.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\importer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_kotlin_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\java\java_names.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\js\js_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\js\well_known_types_embed.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\objectivec\objectivec_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\objectivec\objectivec_helpers.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\parser.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\php\php_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\plugin.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\plugin.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\python\python_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\compiler\ruby\ruby_generator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\descriptor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\descriptor.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\descriptor_database.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\duration.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\dynamic_message.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\empty.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\extension_set.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\extension_set_inl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\field_access_listener.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\field_mask.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_enum_reflection.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_enum_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_message_reflection.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_message_table_driven.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_message_tctable_decl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_message_tctable_impl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\generated_message_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\has_bits.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\implicit_weak_message.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\coded_stream.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\gzip_stream.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\io_win32.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\printer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\strtod.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\tokenizer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream_impl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\io\zero_copy_stream_impl_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_entry.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_entry_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_field.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_field_inl.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_field_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\map_type_handler.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\message.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\message_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\metadata.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\metadata_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\parse_context.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\port.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\reflection.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\reflection_ops.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\repeated_field.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\service.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\source_context.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\struct.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\bytestream.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\callback.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\casts.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\hash.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\logging.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\macros.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\map_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\mutex.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\once.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\platform_macros.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\port.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\status.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\stl_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\stringpiece.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\strutil.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\stubs\template_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\text_format.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\timestamp.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\type.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\unknown_field_set.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\delimited_message_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\field_comparator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\field_mask_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\json_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\message_differencer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\time_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\type_resolver.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\util\type_resolver_util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\wire_format.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\wire_format_lite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="install\include\google\protobuf\wrappers.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="swbf.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libprotobuf.lib" />
+    <Library Include="EasyHook32.lib" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,6 @@
+[submodule "Coms/SWBF-Communicator/protobuf"]
+	path = Coms/SWBF-Communicator/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
+[submodule "Coms/Communicator/protobuf"]
+	path = Coms/Communicator/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git

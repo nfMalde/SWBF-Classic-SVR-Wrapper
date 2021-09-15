@@ -1,0 +1,60 @@
+Microsoft (R) COFF/PE Dumper Version 14.29.30133.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file Galaxy.dll
+
+File Type: DLL
+
+  Section contains the following exports for Galaxy.dll
+
+    00000000 characteristics
+    5DB18956 time date stamp Thu Oct 24 13:21:58 2019
+        0.00 version
+           1 ordinal base
+          28 number of functions
+          28 number of names
+
+    ordinal hint RVA      name
+
+          1    0 0000FD03 ?Apps@api@galaxy@@YAPAVIApps@12@XZ
+          2    1 00018D22 ?Chat@api@galaxy@@YAPAVIChat@12@XZ
+          3    2 00022697 ?CustomNetworking@api@galaxy@@YAPAVICustomNetworking@12@XZ
+          4    3 0002D876 ?Friends@api@galaxy@@YAPAVIFriends@12@XZ
+          5    4 0000D774 ?GameServerListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ
+          6    5 0002BCD3 ?GameServerLogger@api@galaxy@@YAPAVILogger@12@XZ
+          7    6 0000F0C9 ?GameServerMatchmaking@api@galaxy@@YAPAVIMatchmaking@12@XZ
+          8    7 0001498E ?GameServerNetworking@api@galaxy@@YAPAVINetworking@12@XZ
+          9    8 0002FE8C ?GameServerTelemetry@api@galaxy@@YAPAVITelemetry@12@XZ
+         10    9 0002CA2F ?GameServerUser@api@galaxy@@YAPAVIUser@12@XZ
+         11    A 0002A315 ?GameServerUtils@api@galaxy@@YAPAVIUtils@12@XZ
+         12    B 0001C8F5 ?GetError@api@galaxy@@YAPBVIError@12@XZ
+         13    C 0002E064 ?Init@api@galaxy@@YAXABUInitOptions@12@@Z
+         14    D 000164D2 ?InitGameServer@api@galaxy@@YAXABUInitOptions@12@@Z
+         15    E 000048BD ?ListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ
+         16    F 0000524A ?Logger@api@galaxy@@YAPAVILogger@12@XZ
+         17   10 00021F5D ?Matchmaking@api@galaxy@@YAPAVIMatchmaking@12@XZ
+         18   11 00012599 ?Networking@api@galaxy@@YAPAVINetworking@12@XZ
+         19   12 00023FB0 ?ProcessData@api@galaxy@@YAXXZ
+         20   13 0002773C ?ProcessGameServerData@api@galaxy@@YAXXZ
+         21   14 0000AD44 ?Shutdown@api@galaxy@@YAXXZ
+         22   15 00017C7E ?ShutdownGameServer@api@galaxy@@YAXXZ
+         23   16 0002A266 ?Stats@api@galaxy@@YAPAVIStats@12@XZ
+         24   17 000126A2 ?Storage@api@galaxy@@YAPAVIStorage@12@XZ
+         25   18 00012076 ?Telemetry@api@galaxy@@YAPAVITelemetry@12@XZ
+         26   19 0001AEA6 ?User@api@galaxy@@YAPAVIUser@12@XZ
+         27   1A 00027007 ?Utils@api@galaxy@@YAPAVIUtils@12@XZ
+         28   1B 0002E942 load
+
+  Summary
+
+        1000 .00cfg
+       64000 .data
+        2000 .gfids
+        3000 .idata
+      18C000 .rdata
+       5E000 .reloc
+        1000 .rsrc
+      778000 .text
+        2000 .tls
+        1000 _RDATA

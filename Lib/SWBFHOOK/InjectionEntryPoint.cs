@@ -96,19 +96,11 @@ namespace SWBFHOOK
 
                 **/
 
-                var dr = EasyHook.LocalHook.GetProcAddress("Galaxy.dll", "?Matchmaking@api@galaxy@@YAPAVIMatchmaking@12@XZ");
-                var nr = EasyHook.LocalHook.GetProcAddress("Galaxy.dll", "?Networking@api@galaxy@@YAPAVINetworking@12@XZ");
-
-                _server.ReportMessage($"Matchmaking Method found at addres via EH: {dr}");
-                _server.ReportMessage($"Networking Method found at address via EH {nr}");
-
-                _server.ReportMessage($"Installing Lobby Hook to intercept lobby calls...");
-
-                var hookLobby = EasyHook.LocalHook.Create(dr, new MatchmakingD(Matchmaking_Hook), this);
-               
-
-                hookLobby.ThreadACL.SetExclusiveACL(new Int32[] { 0 }); 
-
+                var sender = EasyHook.LocalHook.GetProcAddress("WS2_32.dll", "send");
+                _server.ReportMessage($"Found Sender: {sender}");
+                var sendhook = EasyHook.LocalHook.Create(sender, new Del_WS2_32_Send(WS2_32_Send_Hook), this);
+                _server.ReportMessage("Hook for sender installed...");
+                sendhook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
 
 
                 _server.ReportMessage("Hooks installed");
@@ -123,69 +115,69 @@ namespace SWBFHOOK
                     _server.ReportMessage("Trying to contact Networking Interface...");
                     try
                     {
-                        _server.ReportMessage("Waiting for Network Interface to be ready...");
+                        //_server.ReportMessage("Waiting for Network Interface to be ready...");
 
-                        IntPtr n = IntPtr.Zero;
+                        //IntPtr n = IntPtr.Zero;
 
-                        while (n == IntPtr.Zero)
-                        {
+                        //while (n == IntPtr.Zero)
+                        //{
 
-                            n = Networking();
-                            System.Threading.Thread.Sleep(2000);
-                        }
+                        //    n = Networking();
+                        //    System.Threading.Thread.Sleep(2000);
+                        //}
 
-                        _server.ReportMessage($"Network Interface is ready. {n}");
-                        _server.ReportMessage($"Generating struct for Networking...");
-                        IntPtr vtablePtr = Marshal.ReadIntPtr(n, 0);
+                        //_server.ReportMessage($"Network Interface is ready. {n}");
+                        //_server.ReportMessage($"Generating struct for Networking...");
+                        //IntPtr vtablePtr = Marshal.ReadIntPtr(n, 0);
 
-                        Interceptors.Structs.NetworkingStruct nTable = Marshal.PtrToStructure<Interceptors.Structs.NetworkingStruct>(vtablePtr);
+                        //Interceptors.Structs.NetworkingStruct nTable = Marshal.PtrToStructure<Interceptors.Structs.NetworkingStruct>(vtablePtr);
 
-                        _server.ReportMessage("Follwing Networking Method Addresses were found:");
-                        _server.ReportMessage($"SendP2PPacket={nTable.SendP2PPacket}");
-                        _server.ReportMessage($"PeekP2PPacket={nTable.PeekP2PPacket}");
-                        _server.ReportMessage($"IsP2PPacketAvailable={nTable.IsP2PPacketAvailable}");
-                        _server.ReportMessage($"ReadP2PPacket={nTable.ReadP2PPacket}");
-                        _server.ReportMessage($"PopP2PPacket={nTable.PopP2PPacket}");
-                        _server.ReportMessage($"GetPingWith={nTable.GetPingWith}");
+                        //_server.ReportMessage("Follwing Networking Method Addresses were found:");
+                        //_server.ReportMessage($"SendP2PPacket={nTable.SendP2PPacket}");
+                        //_server.ReportMessage($"PeekP2PPacket={nTable.PeekP2PPacket}");
+                        //_server.ReportMessage($"IsP2PPacketAvailable={nTable.IsP2PPacketAvailable}");
+                        //_server.ReportMessage($"ReadP2PPacket={nTable.ReadP2PPacket}");
+                        //_server.ReportMessage($"PopP2PPacket={nTable.PopP2PPacket}");
+                        //_server.ReportMessage($"GetPingWith={nTable.GetPingWith}");
 
-                        SendP2PPacketDelegate sendp2pD = Marshal.GetDelegateForFunctionPointer<SendP2PPacketDelegate>(nTable.SendP2PPacket);
+                        //SendP2PPacketDelegate sendp2pD = Marshal.GetDelegateForFunctionPointer<SendP2PPacketDelegate>(nTable.SendP2PPacket);
 
-                        _server.ReportMessage("Trying to reach out for ListenerRegistar to hook into network traffic...");
+                        //_server.ReportMessage("Trying to reach out for ListenerRegistar to hook into network traffic...");
 
-                        IntPtr tbRegistrar = IntPtr.Zero;
+                        //IntPtr tbRegistrar = IntPtr.Zero;
 
-                        while (tbRegistrar == IntPtr.Zero)
-                        {
-                            tbRegistrar = ListenerRegistrar();
-                        }
+                        //while (tbRegistrar == IntPtr.Zero)
+                        //{
+                        //    tbRegistrar = ListenerRegistrar();
+                        //}
 
-                        _server.ReportMessage($"Listener Register found at address: {tbRegistrar}");
-                        _server.ReportMessage("Generating struct...");
+                        //_server.ReportMessage($"Listener Register found at address: {tbRegistrar}");
+                        //_server.ReportMessage("Generating struct...");
 
-                        IntPtr vtableRegistrar = Marshal.ReadIntPtr(tbRegistrar, 0);
+                        //IntPtr vtableRegistrar = Marshal.ReadIntPtr(tbRegistrar, 0);
 
 
-                        Interceptors.Structs.ListenerRegistrarStruct listenerRegistrarStruct = Marshal.PtrToStructure<Interceptors.Structs.ListenerRegistrarStruct>(vtableRegistrar);
+                        //Interceptors.Structs.ListenerRegistrarStruct listenerRegistrarStruct = Marshal.PtrToStructure<Interceptors.Structs.ListenerRegistrarStruct>(vtableRegistrar);
 
-                        _server.ReportMessage($"Struct generated with methods:");
-                        _server.ReportMessage($"Register(*listenerType, *listener) = {listenerRegistrarStruct.Register}");
-                        _server.ReportMessage($"Unregister(*listenerType, *listener) = {listenerRegistrarStruct.Unregister}");
+                        //_server.ReportMessage($"Struct generated with methods:");
+                        //_server.ReportMessage($"Register(*listenerType, *listener) = {listenerRegistrarStruct.Register}");
+                        //_server.ReportMessage($"Unregister(*listenerType, *listener) = {listenerRegistrarStruct.Unregister}");
 
-                        _server.ReportMessage($"Registering delegates...");
+                        //_server.ReportMessage($"Registering delegates...");
 
-                        RegisterDelegate regD = Marshal.GetDelegateForFunctionPointer<RegisterDelegate>(listenerRegistrarStruct.Register);
-                        NetworkingListener l = new NetworkingListener(this.channelName);
-                        IntPtr t = Marshal.AllocHGlobal(Marshal.SizeOf(ListenerType.NETWORKING));
+                        //RegisterDelegate regD = Marshal.GetDelegateForFunctionPointer<RegisterDelegate>(listenerRegistrarStruct.Register);
+                        //NetworkingListener l = new NetworkingListener(this.channelName);
+                        //IntPtr t = Marshal.AllocHGlobal(Marshal.SizeOf(ListenerType.NETWORKING));
 
-                        Marshal.StructureToPtr(ListenerType.NETWORKING, t, false);
+                        //Marshal.StructureToPtr(ListenerType.NETWORKING, t, false);
 
-                        IntPtr lt = Marshal.AllocHGlobal(Marshal.SizeOf(l));
-                        Marshal.StructureToPtr(l, lt, false);
-                        _server.ReportMessage($"Converted to pointers: {t}, {lt}");
+                        //IntPtr lt = Marshal.AllocHGlobal(Marshal.SizeOf(l));
+                        //Marshal.StructureToPtr(l, lt, false);
+                        //_server.ReportMessage($"Converted to pointers: {t}, {lt}");
 
-                        regD(t, lt);
+                        //regD(t, lt);
 
-                        _server.ReportMessage($"Delegate registered.");
+                        //_server.ReportMessage($"Delegate registered.");
 
 
                     }
@@ -228,7 +220,7 @@ namespace SWBFHOOK
 
 
                 // Remove hooks
-                hookLobby.Dispose(); 
+               // hookLobby.Dispose(); 
 
                 // Finalise cleanup of hooks
                 EasyHook.LocalHook.Release();
@@ -268,6 +260,9 @@ namespace SWBFHOOK
         SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr ListenerRegistrar();
 
+        [DllImportAttribute("ws2_32.dll", EntryPoint = "send", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        static extern IntPtr EXT_WS2_32_Send(uint s, byte[] buf, int len, int flags);
+
         #endregion
 
         #region Delegates
@@ -292,6 +287,9 @@ namespace SWBFHOOK
                     SetLastError = true)]
         delegate IntPtr NetworkingD();
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
+        delegate IntPtr Del_WS2_32_Send(uint s, byte[] buf, int len, int flags);
+
         #endregion
 
         #region Method Hooks
@@ -308,6 +306,16 @@ namespace SWBFHOOK
             }
 
             return Matchmaking();
+        }
+
+
+        IntPtr WS2_32_Send_Hook(uint s, byte[] buf, int len, int flags)
+        {
+            string ss = System.Text.Encoding.UTF8.GetString(buf);
+
+            this._server.ReportMessage($"Sent Packet: S={s}//buf={buf.Length}=={ss}, len = {len}, flags={flags}");
+
+            return EXT_WS2_32_Send(s, buf, len, flags);
         }
          
 

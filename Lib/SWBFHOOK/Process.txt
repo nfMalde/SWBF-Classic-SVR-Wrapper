@@ -1,0 +1,11 @@
+﻿SWBF-Wrapper
+-> Starts SWBF-Communitcator
+
+Params: ServerParams: "string", IPC Channel
+
+SWBF Communicator:
+
+Hooks SWBF and starts it.
+Hooks processes private function (Callback for Join)
+
+Prints info in IPC

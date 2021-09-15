@@ -24,6 +24,12 @@
     <ClInclude Include="stdafx.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="swbf.pb.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GalaxyIDH.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -35,8 +41,17 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="swbf.pb.cc">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="EasyHook32.dll" />
+    <None Include="Galaxy.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libprotobuf.lib" />
+    <Library Include="EasyHook32.lib" />
   </ItemGroup>
 </Project>

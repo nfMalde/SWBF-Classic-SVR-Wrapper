@@ -1,27 +1,161 @@
 // SWBF-Communicator.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
 //
-
+#include <windows.h>
 #include <iostream>
-#include <stdio.h>
-#include <Windows.h>
+
+#include <shlobj.h>
+#include <filesystem>
+
+#include <fstream>
+#include "swbf.pb.h"  
 #include <easyhook.h>
-#include <stdlib.h>
-#include <string>
+ 
+using namespace std; 
+
+int dirExists(const char* path)
+{
+    struct stat info;
+
+    if (stat(path, &info) != 0)
+        return 0;
+    else if (info.st_mode & S_IFDIR)
+        return 1;
+    else
+        return 0;
+}
+
+string handleIPCPath(const char* ipcHandleName) {
+    CHAR my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+
+    if (result != S_OK)
+    std::cout << "Error: " << result << "\n";
+    else {
+        std::string path = std::string("C:\\ipc");
+        path = path.append("\\");
+        path = path.append("SWBF-ServerMgr");
+
+        if (!dirExists(path.c_str())) {
+            std::cout << "Creating directoy " << path << std::endl;
+            CreateDirectoryA(path.c_str(), NULL);
+        }
+
+        path = path.append("\\Data");
+
+        if (!dirExists(path.c_str())) {
+            std::cout << "Creating directoy " << path << std::endl;
+            CreateDirectoryA(path.c_str(), NULL);
+        }
+
+        std::cout << "Path completed. Creating IPC Headers and File...";
+        path = path.append("\\");
+        path = path.append(ipcHandleName);
+        path = path.append(".ipc-file");
+        return path;
+    }
+    return "";
+} 
+
+void ReadMessages(swbf::Interact interact) {
+     
+
+    for (int i = 0; i < interact.textmessages_size(); i++) {
+        string message = interact.textmessages(i);
+
+        cout << "[IPC][INTERACT] " << message << endl;
+         
+    } 
+} 
+void HandleInteractionMessages() {
+
+    cout << "Getting IPC Handlers..." << endl;
+
+    string interactPath = handleIPCPath("interact");
+
+    cout << "IPC for Interact is " << interactPath << endl;
+
+    while (true)
+    {
+        cout << "Reading IPC Interact" << endl;
+
+        swbf::Interact  interaction;
+        {
+            // Read the existing address book.
+            fstream input(interactPath, ios::in | ios::binary);
+            if (!input) {
+                cout << "No Messages so far..." << endl;
+
+                
+
+            }
+            else if (!interaction.ParseFromIstream(&input)) {
+                cerr << "Failed to parse address book." << endl;
+                return;
+            }
+        }
+
+        ReadMessages(interaction);
+
+        Sleep(1000);
+    }
+}
 
 inline bool ex(const std::string& name) {
     struct stat buffer;
     return (stat(name.c_str(), &buffer) == 0);
 }
 
+void SetCompleteHook(BYTE head, DWORD offset, ...)
+{
+    DWORD OldProtect;
+
+    VirtualProtect((void*)offset, 5, PAGE_EXECUTE_READWRITE, &OldProtect);
+
+    if (head != 0xFF)
+    {
+        *(BYTE*)(offset) = head;
+    }
+
+    DWORD* function = &offset + 1;
+
+    *(DWORD*)(offset + 1) = (*function) - (offset + 5);
+
+    VirtualProtect((void*)offset, 5, OldProtect, &OldProtect);
+}
+
+std::wstring to_wide(const std::string& multi) {
+    std::wstring wide; wchar_t w; mbstate_t mb{};
+    size_t n = 0, len = multi.length() + 1;
+    while (auto res = mbrtowc(&w, multi.c_str() + n, len - n, &mb)) {
+        if (res == size_t(-1) || res == size_t(-2))
+            throw "invalid encoding";
+
+        n += res;
+        wide += w;
+    }
+    return wide;
+}
+
 int main(int argc, char** argv)
 {
-    // 0 = Path To Battlefront.exe
-    // 1 = Server Args
+   
+     
 
- 
 
-    std::cout << "Starting SWBF Classic Server Wrapper..." << std::endl;
- 
+    //fstream input("swbfipccommunicator.gipc", ios::in | ios::binary);
+    //if (!input) {
+    //    cout << "swbfipccommunicator.gipc" << ": File not found.  Creating a new file." << endl;
+    //}
+    //else if (!interact.ParseFromIstream(&input)) {
+    //    cerr << "Failed to parse address book." << endl;
+    //    return -1;
+    //}
+
+
+    std::cout << "Starting SWBF Classic Com Services..." << std::endl;
+
+
+
     if (argc >= 3) {
         std::string exePath(argv[1]);
         exePath.append("\\Battlefront.exe");
@@ -34,14 +168,14 @@ int main(int argc, char** argv)
         launchP.append(" ");
         launchP.append(serverArgs);
 
-        WCHAR* dllToInject = (WCHAR*)L"..\\..\\Debug\\SHOOK.dll";
+        WCHAR* dllToInject = (WCHAR*)L"..\\..\\Release\\SHOOK.dll";
 
         
         std::cout << "Trying to find injection library..." << std::endl;
-        std::string f("..\\..\\Debug\\SHOOK.dll");
+        std::string f("..\\..\\Release\\SHOOK.dll");
 
         if (!ex(f)) {
-            std::cout << "Error: DLL not found: " << L"..\\..\\Debug\\SHOOK.dll";
+            std::cout << "Error: DLL not found: " << L"..\\..\\Release\\SHOOK.dll";
 
             return -1;
         }
@@ -52,35 +186,83 @@ int main(int argc, char** argv)
 
         WCHAR* exe_ = (WCHAR*)wide_string.c_str();
         WCHAR* arg = (WCHAR*)wide_string2.c_str();
+        wstring exeWS = to_wide(exePath);
+        WCHAR* tt = (WCHAR*)exeWS.c_str();
+        WCHAR* t2 = (WCHAR*)L"D:\\Steam\\steamapps\\common\\Star Wars Battlefront (Classic 2004)\\GameData\\Battlefront.exe";
+        WCHAR* t3 = (WCHAR*)L"/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename NoAI NoCP /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /spawn 5 bes2r 100 100 bes2a 100 100";
+        cout << tt << endl;
+ 
 
-        RhCreateAndInject(
-            exe_,
-            arg,
-            NULL,
-            EASYHOOK_INJECT_DEFAULT,
-            dllToInject, // 32-bit
-            NULL,		 // 64-bit not provided
-            &freqOffset, // data to send to injected DLL entry point
-            sizeof(DWORD),// size of data to send
-            &processId
-        );
+         // additional information
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
 
+        // set the size of the structures
+        ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        ZeroMemory(&pi, sizeof(pi));
+ 
+
+        string str = string("/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename NoAI NoCP /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /spawn 5 bes2r 100 100 bes2a 100 100");        // Command line
+
+        LPSTR s = const_cast<char*>(str.c_str());
+        std::wcout << "Enter the target process Id: (0=create new)";
+        std::cin >> processId;
         
+        if (processId > 0) {
+            // Inject dllToInject into the target process Id, passing 
+        // freqOffset as the pass through data.
+            NTSTATUS nt = RhInjectLibrary(
+                processId,   // The process to inject into
+                0,           // ThreadId to wake up upon injection
+                EASYHOOK_INJECT_DEFAULT,
+                dllToInject, // 32-bit
+                NULL,		 // 64-bit not provided
+                NULL, // data to send to injected DLL entry point
+                NULL// size of data to send
+            );
 
-        std::cout << "Process started as id " << processId << std::endl; 
-       
-        while (true)
-        {
-            std::cout << "Waiting for close..." << std::endl;
-            Sleep(5000);
+            if (nt != 0)
+            {
+                printf("RhInjectLibrary failed with error code = %d\n", nt);
+                PWCHAR err = RtlGetLastErrorString();
+                std::wcout << err << "\n";
+            }
+            else
+            {
+                std::wcout << L"Library injected successfully.\n";
+            }
+        }
+        else {
+            NTSTATUS nt = RhCreateAndInject(
+                t2,
+                t3,
+                NULL,
+                EASYHOOK_INJECT_DEFAULT,
+                dllToInject, // 32-bit
+                NULL,		 // 64-bit not provided
+                &freqOffset, // data to send to injected DLL entry point
+                sizeof(DWORD),// size of data to send
+                &processId
+            );
 
+            if (nt != 0)
+            {
+                printf("RhInjectLibrary failed with error code = %d\n", nt);
+                PWCHAR err = RtlGetLastErrorString();
+                std::wcout << err << "\n";
+            }
+            else
+            {
+                std::wcout << L"Library injected successfully.\n";
+            }
         }
 
-
-        return 0;
+        HandleInteractionMessages();
 
     }
-    
+ 
+
     return -1;
 }
 

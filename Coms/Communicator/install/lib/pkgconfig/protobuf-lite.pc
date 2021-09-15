@@ -1,0 +1,11 @@
+prefix=C:/Users/Malte/source/repos/SWBF.CLASSIC-Server-Hook/Coms/Communicator/install
+exec_prefix=C:/Users/Malte/source/repos/SWBF.CLASSIC-Server-Hook/Coms/Communicator/install
+libdir=C:/Users/Malte/source/repos/SWBF.CLASSIC-Server-Hook/Coms/Communicator/install/lib
+includedir=C:/Users/Malte/source/repos/SWBF.CLASSIC-Server-Hook/Coms/Communicator/install/include
+
+Name: Protocol Buffers
+Description: Google's Data Interchange Format
+Version: 3.17.3.0
+Libs: -L${libdir} -lprotobuf-lite 
+Cflags: -I${includedir}
+Conflicts: protobuf

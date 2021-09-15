@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package swbf;
+
+message Interact {
+  repeated string textMessages = 1; 
+  
+} 
