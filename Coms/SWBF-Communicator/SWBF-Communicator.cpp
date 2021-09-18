@@ -11,6 +11,7 @@
 #include <easyhook.h>
  
 using namespace std; 
+std::vector<std::string> savedMessages;
 
 int dirExists(const char* path)
 {
@@ -61,22 +62,34 @@ void ReadMessages(swbf::Interact interact) {
 
     for (int i = 0; i < interact.textmessages_size(); i++) {
         string message = interact.textmessages(i);
-
-        cout << "[IPC][INTERACT] " << message << endl;
+        if (std::find(savedMessages.begin(), savedMessages.end(), message) != savedMessages.end())
+            continue;
+        else
+        {
+            cout << "[IPC][INTERACT] " << message << endl;
+            savedMessages.push_back(message);
+        }
          
     } 
 } 
-void HandleInteractionMessages() {
 
-    cout << "Getting IPC Handlers..." << endl;
-
+void ClearIPC() {
+    cout << "Clearing Interact IPC Buffer" << endl;
     string interactPath = handleIPCPath("interact");
 
-    cout << "IPC for Interact is " << interactPath << endl;
+    std::remove(interactPath.c_str());
+}
+
+void HandleInteractionMessages() {
+
+    
+
+    string interactPath = handleIPCPath("interact");
+     
 
     while (true)
     {
-        cout << "Reading IPC Interact" << endl;
+         
 
         swbf::Interact  interaction;
         {
@@ -139,7 +152,7 @@ std::wstring to_wide(const std::string& multi) {
 int main(int argc, char** argv)
 {
    
-     
+    ClearIPC();
 
 
     //fstream input("swbfipccommunicator.gipc", ios::in | ios::binary);

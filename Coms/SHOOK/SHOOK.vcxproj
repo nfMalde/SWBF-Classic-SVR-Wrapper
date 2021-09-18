@@ -146,23 +146,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ExtLobbyCreatedListener.h" />
+    <ClInclude Include="ExtRegistrar.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GalaxyIDH.h" />
+    <ClInclude Include="IGalaxyID.h" />
+    <ClInclude Include="IGalaxyInitOptions.h" />
+    <ClInclude Include="IGalaxyListener.h" />
+    <ClInclude Include="IIDType.h" />
+    <ClInclude Include="IListenerRegistrar.h" />
+    <ClInclude Include="IListenerType.h" />
+    <ClInclude Include="ILobbyCreatedListener.h" />
+    <ClInclude Include="ILobbyCreateResult.h" />
+    <ClInclude Include="IPCCommucator.h" />
     <ClInclude Include="SHOOK.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="swbf.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ExtLobbyCreatedListener.cpp" />
+    <ClCompile Include="ExtRegistrar.cpp" />
+    <ClCompile Include="IGalaxyID.cpp" />
+    <ClCompile Include="IGalaxyInitOptions.cpp" />
+    <ClCompile Include="IGalaxyListener.cpp" />
+    <ClCompile Include="IIDType.cpp" />
+    <ClCompile Include="IListenerRegistrar.cpp" />
+    <ClCompile Include="IListenerType.cpp" />
+    <ClCompile Include="ILobbyCreatedListener.cpp" />
+    <ClCompile Include="ILobbyCreateResult.cpp" />
+    <ClCompile Include="IPCCommucator.cpp" />
     <ClCompile Include="SHOOK.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="swbf.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EasyHook32.dll" />
-    <None Include="Galaxy.dll">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

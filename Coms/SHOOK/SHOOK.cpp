@@ -1,402 +1,200 @@
-
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#pragma comment(lib, "Ws2_32.lib")
 #include <stdio.h>
 #include <iostream>
 #include <windows.h>
 #include <shlobj.h>
-#include "SHOOK.h"
-#include "stdafx.h"
 #include <easyhook.h>
 #include <string>
-#include <fstream>
-#include "swbf.pb.h"  
-#include "GalaxyIDH.h"  
+#include <fstream> 
+#include <stdio.h>
+#include "SHOOK.h"
+#include "stdafx.h"
 
+extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO * inRemoteInfo);
 
 // link with ws2_32.lib
 using namespace std;
 
+#include "IPCCommucator.h" 
+#include "IListenerRegistrar.h";
+#include "ExtRegistrar.h";
+#include "IGalaxyInitOptions.h"
+#include "IListenerType.h";
+#include "ExtLobbyCreatedListener.h";
+
 #pragma comment(lib, "Ws2_32.lib")
-template <typename T>
-std::string tostring(const T& t)
-{
-	std::ostringstream ss;
-	ss << t;
-	return ss.str();
-}
-
+IPCCom com = IPCCom();
+ 
  
 
-int dirExists(const char* path)
+void* get_in_addr(struct sockaddr* sa)
 {
-	struct stat info;
-
-	if (stat(path, &info) != 0)
-		return 0;
-	else if (info.st_mode & S_IFDIR)
-		return 1;
-	else
-		return 0;
+	if (sa->sa_family == AF_INET)
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-string handleIPCPath(const char* ipcHandleName) {
-	CHAR my_documents[MAX_PATH];
-	HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-
-	if (result != S_OK)
-		std::cout << "Error: " << result << "\n";
-	else {
-		std::string path = std::string("C:\\ipc");
-		path = path.append("\\");
-		path = path.append("SWBF-ServerMgr");
-
-		if (!dirExists(path.c_str())) {
-			std::cout << "Creating directoy " << path << std::endl;
-			CreateDirectoryA(path.c_str(), NULL);
-		}
-
-		path = path.append("\\Data");
-
-		if (!dirExists(path.c_str())) {
-			std::cout << "Creating directoy " << path << std::endl;
-			CreateDirectoryA(path.c_str(), NULL);
-		}
-
-		std::cout << "Path completed. Creating IPC Headers and File...";
-		path = path.append("\\");
-		path = path.append(ipcHandleName);
-		path = path.append(".ipc-file");
-		return path;
-	}
-	return "";
+wchar_t* convertCharArrayToLPCWSTR(const char* charArray)
+{
+	wchar_t* wString = new wchar_t[4096];
+	MultiByteToWideChar(CP_ACP, 0, charArray, -1, wString, 4096);
+	return wString;
 }
 
+const  char* xinet_ntop(int af, const void* src, char* dst, socklen_t size)
+{
+	struct sockaddr_storage ss;
+	unsigned long s = size;
 
-void sendMessage(string msg) {
-	string ipcpath = handleIPCPath("interact");
-	cout << "Reading IPC Interact" << endl;
+	ZeroMemory(&ss, sizeof(ss));
+	ss.ss_family = af;
 
-	swbf::Interact  interaction;
-	{
-		// Read the existing address book.
-		fstream input(ipcpath, ios::in | ios::binary);
-		if (!input) {
-			cout << "No Messages so far..." << endl;
-
-
-
-		}
-		else if (!interaction.ParseFromIstream(&input)) {
-			cerr << "Failed to parse address book." << endl;
-			return;
-		}
+	switch (af) {
+	case AF_INET:
+		((struct sockaddr_in*)&ss)->sin_addr = *(struct in_addr*)src;
+		break;
+	case AF_INET6:
+		((struct sockaddr_in6*)&ss)->sin6_addr = *(struct in6_addr*)src;
+		break;
+	default:
+		return NULL;
 	}
+	/* cannot direclty use &size because of strict aliasing rules */
+	return (WSAAddressToStringW((struct sockaddr*)&ss, sizeof(ss), NULL, convertCharArrayToLPCWSTR(dst), &s) == 0) ?
+		dst : NULL;
+} 
 
-	interaction.add_textmessages(msg);
-	// Write the new address book back to disk.
-	fstream output(ipcpath, ios::out | ios::trunc | ios::binary);
-	if (!interaction.SerializeToOstream(&output)) {
-		cout << "Failed to write ipc." << endl;
-		return;
+typedef IListenerRegistrar*(__cdecl* fListenerRegistrar)();
+
+IListenerRegistrar* HListenerRegistrar() {
+	com.sendMessage("HListenerRegistrar:: Inctercepting ListenerRegistrar.");
+
+	HMODULE dll = LoadLibrary(L"Galaxy.dll");
+
+	if (dll != 0) {
+		com.sendMessage("HListenerRegistrar:: DLL found. Replacing object...");
+
+		fListenerRegistrar f = (fListenerRegistrar)GetProcAddress(dll, "?ListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ");
+
+		
+
+		ExtRegistrar* extended = new ExtRegistrar(f(), new IPCCom());
+		com.sendMessage("HListenerRegistrar:: Object is replaced.");
+		return extended;
 	}
+	com.sendMessage("Error DLL NOT FOUND");
 
+	return NULL;
 }
-extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO * inRemoteInfo);
 
-enum ListenerType
-{
-	LISTENER_TYPE_BEGIN,
-	LOBBY_LIST = LISTENER_TYPE_BEGIN,
-	LOBBY_CREATED,
-	LOBBY_ENTERED,
-	LOBBY_LEFT,
-	LOBBY_DATA,
-	LOBBY_MEMBER_STATE,
-	LOBBY_OWNER_CHANGE,
-	AUTH,
-	LOBBY_MESSAGE,
-	NETWORKING,
-	USER_DATA,
-	USER_STATS_AND_ACHIEVEMENTS_RETRIEVE,
-	STATS_AND_ACHIEVEMENTS_STORE,
-	ACHIEVEMENT_CHANGE,
-	LEADERBOARDS_RETRIEVE,
-	LEADERBOARD_ENTRIES_RETRIEVE,
-	LEADERBOARD_SCORE_UPDATE_LISTENER,
-	PERSONA_DATA_CHANGED,
-	RICH_PRESENCE_CHANGE_LISTENER,
-	GAME_JOIN_REQUESTED_LISTENER,
-	OPERATIONAL_STATE_CHANGE,
-	FRIEND_LIST_RETRIEVE,
-	ENCRYPTED_APP_TICKET_RETRIEVE,
-	ACCESS_TOKEN_CHANGE,
-	LEADERBOARD_RETRIEVE,
-	SPECIFIC_USER_DATA,
-	INVITATION_SEND,
-	RICH_PRESENCE_LISTENER,
-	GAME_INVITATION_RECEIVED_LISTENER,
-	NOTIFICATION_LISTENER,
-	LOBBY_DATA_RETRIEVE,
-	USER_TIME_PLAYED_RETRIEVE,
-	OTHER_SESSION_START,
-	FILE_SHARE,
-	SHARED_FILE_DOWNLOAD,
-	CUSTOM_NETWORKING_CONNECTION_OPEN,
-	CUSTOM_NETWORKING_CONNECTION_CLOSE,
-	CUSTOM_NETWORKING_CONNECTION_DATA,
-	OVERLAY_INITIALIZATION_STATE_CHANGE,
-	OVERLAY_VISIBILITY_CHANGE,
-	CHAT_ROOM_WITH_USER_RETRIEVE_LISTENER,
-	CHAT_ROOM_MESSAGE_SEND_LISTENER,
-	CHAT_ROOM_MESSAGES_LISTENER,
-	FRIEND_INVITATION_SEND_LISTENER,
-	FRIEND_INVITATION_LIST_RETRIEVE_LISTENER,
-	FRIEND_INVITATION_LISTENER,
-	FRIEND_INVITATION_RESPOND_TO_LISTENER,
-	FRIEND_ADD_LISTENER,
-	FRIEND_DELETE_LISTENER,
-	CHAT_ROOM_MESSAGES_RETRIEVE_LISTENER,
-	USER_FIND_LISTENER,
-	NAT_TYPE_DETECTION,
-	SENT_FRIEND_INVITATION_LIST_RETRIEVE_LISTENER,
-	LOBBY_DATA_UPDATE_LISTENER,
-	LOBBY_MEMBER_DATA_UPDATE_LISTENER,
-	USER_INFORMATION_RETRIEVE_LISTENER,
-	RICH_PRESENCE_RETRIEVE_LISTENER,
-	GOG_SERVICES_CONNECTION_STATE_LISTENER,
-	TELEMETRY_EVENT_SEND_LISTENER,
-	LISTENER_TYPE_END
-};
+typedef void(__cdecl* fInit)(IGalaxyInitOptions* initOptions);
 
- enum LobbyCreateResult
-{
-	LOBBY_CREATE_RESULT_SUCCESS,
-	LOBBY_CREATE_RESULT_ERROR,
-	LOBBY_CREATE_RESULT_CONNECTION_FAILURE
-}; 
-
-class MyListener {
-public:
-	void OnLobbyCreated(const void* lobbyID, void* result) {
-		sendMessage("Lobby created:");
-		 
-	} 
-
-	static ListenerType GetListenerType() {
-		return ListenerType::LOBBY_CREATED;
-	}
-};
-
-
-class NetworkingL {
-	void OnP2PPacketAvailable(uint32_t msgSize, uint8_t channel) {
-		sendMessage("Packaged available");
-	}
-
-	static ListenerType GetListenerType() {
-		return ListenerType::NETWORKING;
-	}
-}; 
-
-extern struct IListenerRegistrar { /* PlaceHolder Structure */
-	void Register(void* listenerType, void* listener);
-	void Unregister(void* listenerType, void* listener);
-};
-
-
-void IListenerRegistrar::Register(void* listenerType, void* listener)
-{
+void AddListeners(IListenerRegistrar* reg) {
 	 
-	 
+	//Lobby Created Listener
+	ExtLobbyCreatedListener* L_LobbyCreated = new ExtLobbyCreatedListener();
+	reg->Register(IListenerType::LOBBY_CREATED, L_LobbyCreated);
+	
 
 }
 
+void HInit(IGalaxyInitOptions* initOptions) {
+	com.sendMessage("Init is called");
+	//Init is the point where we need to register our events!
+	HMODULE dll = LoadLibrary(L"Galaxy.dll");
 
+	if (dll != 0) {
+		fInit f = (fInit)GetProcAddress(dll, "?Init@api@galaxy@@YAXABUInitOptions@12@@Z");
 
-void IListenerRegistrar::Unregister(void* listenerType, void* listener)
-{
+		f(initOptions);
+		fListenerRegistrar listenerReg = (fListenerRegistrar)GetProcAddress(dll, "?ListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ");
+		AddListeners(listenerReg());
+		
+		//TODO: Here we install our events!
+	}
 }
 
-class MyListener2 {
-public:
-	void OnLobbyCreated(void* lobbyID, void* result) {
-		sendMessage("Lobby created:");
+ULONG ACLEntries_HT_LISTENER_REGISTRAR[1] = { 0 };
+HOOK_TRACE_INFO HT_LISTENER_REGISTRAR = { NULL };
+ULONG ACLEntries_HT_INIT[1] = { 0 };
+HOOK_TRACE_INFO HT_INIT = { NULL };
+void _HOOK_Install_Galaxy_Init() {
+	com.sendMessage("Installing Galaxy::API::Init Hook");
+	//Init is the point where we need to register our events!
+	HMODULE dll = LoadLibrary(L"Galaxy.dll");
 
+	if (dll != 0) {
+		NTSTATUS status = LhInstallHook(GetProcAddress(dll, "?Init@api@galaxy@@YAXABUInitOptions@12@@Z"), HInit, NULL, &HT_INIT);
+
+		if (SUCCEEDED(status)) {
+			com.sendMessage("Galaxy::API::Init Hook Installed!");
+			LhSetExclusiveACL(ACLEntries_HT_INIT, 1, &HT_INIT);
+
+		}
+		else {
+			com.sendMessage("[**ERR**] Error hooking init:");
+
+			wstring ws = wstring(RtlGetLastErrorString());
+
+
+			com.sendMessage(string(ws.begin(), ws.end()));
+		}
 	}
 
-	static int GetListenerType() {
-		return 1;
+}
+
+void _HOOK_Install_Galaxy_ListenerRegistrar() {
+	com.sendMessage("Installing Hook: ListenerRegistrar");
+	HMODULE dll = LoadLibrary(L"Galaxy.dll");
+
+	if (dll != 0) {
+		NTSTATUS x = LhInstallHook(GetProcAddress(dll, "?ListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ"), HListenerRegistrar, NULL, &HT_LISTENER_REGISTRAR);
+
+		if (SUCCEEDED(x)) {
+			LhSetExclusiveACL(ACLEntries_HT_LISTENER_REGISTRAR, 1, &HT_LISTENER_REGISTRAR);
+			com.sendMessage("Hook installed: ListenerRegistrar");
+
+		}
+		else {
+			com.sendMessage("[**ERR**] Error hooking listener registrar:");
+
+			wstring ws = wstring(RtlGetLastErrorString());
+			 
+
+			com.sendMessage(string(ws.begin(), ws.end()));
+
+			
+		}
 	}
-};
-
-typedef IListenerRegistrar(__cdecl* fListenerRegistrar)();
-fListenerRegistrar origCall;
-
-typedef void(__cdecl* gInit)(void* param_1);
-
-gInit initCall;
-
-typedef int(__stdcall* fConnect)(SOCKET s, sockaddr* name, int namelen);
-fConnect conCall;
-
-IListenerRegistrar hListener() {
-	sendMessage("Listener called!");
 	
-	return origCall();
-};
- 
-
-int Hconnect(SOCKET s, sockaddr* name, int namelen) {
-	char hostname[NI_MAXHOST];
-	char servInfo[NI_MAXSERV];
-
-	getnameinfo((struct sockaddr*)&name,
-		sizeof(struct sockaddr),
-		hostname,
-		NI_MAXHOST, servInfo, NI_MAXSERV, NI_NUMERICSERV); 
 	
-	sendMessage("Socket Connection Started:"); 
-	sendMessage(hostname);
-	sendMessage(servInfo);
+}
 
-	return conCall(s, name, namelen);
+
+void InstallGalaxyHook() {
+	_HOOK_Install_Galaxy_Init();
+	_HOOK_Install_Galaxy_ListenerRegistrar();
+
 }
 
 void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
-	
-	// 
 
 
-	//std::cout << "SHOOK::NativeInjectionEntryPoint: Injected by process Id: " << inRemoteInfo->HostPID << "\n";
-	//std::cout << "SHOOK::NativeInjectionEntryPoint: Passed in data size: " << inRemoteInfo->UserDataSize << "\n";
-
-
-	// 
-
-	//// Perform hooking
-	//HOOK_TRACE_INFO hHook = { NULL }; // keep track of our hook
-	//int ordinal = 5; 
-	//HMODULE dll = LoadLibrary(L"Galaxy.dll"); 
-	//LPCSTR f = MAKEINTRESOURCEA(ordinal);
-	//FARPROC fn = GetProcAddress(dll, f);
-
-
-	//std::cout << "\n";
-	//std::cout << "SHOOK::NativeInjectionEntryPoint: Win32 GameServerListener found at address: " << fn << "\n";
-
-	//origCall = (fGameServerListenerRegistrar)GetProcAddress(dll, f);
-
-	//std::cout << "SHOOK: Loaded original function " << origCall << std::endl;
-
-
-	//// Install the hook
-	///*NTSTATUS result = LhInstallHook(
-	//	GetProcAddress(dll, f),
-	//	hReg,
-	//	NULL,
-	//	&hHook);
-
-	//if (FAILED(result))
-	//{
-	//	std::wstring s(RtlGetLastErrorString());
-	//	std::wcout << "NativeInjectionEntryPoint: Failed to install hook: " << s << "\n";
-	//}
-	//else
-	//{
-	//	std::cout << "NativeInjectionEntryPoint: Hook 'myBeepHook installed successfully.\n";
-	//}*/
-
-	//// If the threadId in the ACL is set to 0,
-	//// then internally EasyHook uses GetCurrentThreadId()
-	//ULONG ACLEntries[1] = { 0 };
-
-	//// Disable the hook for the provided threadIds, enable for all others
-	//LhSetExclusiveACL(ACLEntries, 1, &hHook);
-
-	  
-
-
-	//sendMessage("Hello from inside the swbf client.");
-	HMODULE dll = LoadLibrary(L"WS2_32.dll");
-
-
-	HOOK_TRACE_INFO hHook = { NULL }; // keep track of our hook
-
-
-	if (dll) {
-		try {
-
-			bool found = false;
-			//void __cdecl galaxy::api::Init(InitOptions *param_1)
-		while (!found) {
-		 
-		 
-			FARPROC addressConnect = GetProcAddress(dll, "connect");
-
-			//sendMessage("Found ListenerRegistrar at address");
-			//sendMessage(string());
-
-			//sendMessage("Trying to call...");
-			if (NULL != addressConnect) {
-				conCall = (fConnect)GetProcAddress(dll, "connect");
-				//sendMessage("Orig Call Found. Ready.");
-				found = true;
-			}
-
-			int ordinalListener = 15;
-
-			LPCSTR fListener = MAKEINTRESOURCEA(ordinalListener);
-
-			origCall = (fListenerRegistrar)GetProcAddress(dll, fListener);
-
-			NTSTATUS result = LhInstallHook(
-				GetProcAddress(dll, "connect"),
-				Hconnect,
-				NULL,
-				&hHook);
-			
-
-			
-			Sleep(1000);
-		}
-
-	
-
-
-		/*if (origCall)
-		//sendMessage("Sending...");
-
-
-		ListenerType t = ListenerType::LOBBY_CREATED;
-		result.Register(t, new MyListener());*/
-
-		//sendMessage("Hook is installed.");
-		}
-		catch (const std::exception& e) { 
-				
-			//sendMessage("Register call failed");
-			//sendMessage(string(e.what()));
-		
-		}
-		sendMessage("OK");
-	}
-
-	// If the threadId in the ACL is set to 0,
-	// then internally EasyHook uses GetCurrentThreadId()
-	ULONG ACLEntries[1] = { 0 };
-
-	// Disable the hook for the provided threadIds, enable for all others
-	LhSetExclusiveACL(ACLEntries, 1, &hHook);
-	 
-
-	// Now register listeners:
-
-
-	RhWakeUpProcess(); 
+	com.sendMessage("Injection Begun....");
+	com.sendMessage("Now hooking Galaxy.dll...");
+	InstallGalaxyHook();
+	com.sendMessage("Done. Continue Game...");
 
 	 
-	
-	return;
+
+	//LhSetExclusiveACL(ACLEntries, 1, &H_SOCK_INFO);
+	//LhSetExclusiveACL(ACLEntries, 1, &H_SOCK_RECV_INFO);
+ 
+
+	RhWakeUpProcess();  
 }
