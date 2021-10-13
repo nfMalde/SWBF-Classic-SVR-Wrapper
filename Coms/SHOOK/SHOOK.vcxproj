@@ -76,7 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\protobuf\src;$(IncludePath)</IncludePath>
+    <IncludePath>D:\protobuf\src;D:\Projects\SWBF-Classic-SVR-Wrapper\Coms\Libs;$(SolutionDir)Coms\RakNet\Source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -147,37 +147,81 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ExtLobbyCreatedListener.h" />
+    <ClInclude Include="ExtLobbyDataListener.h" />
+    <ClInclude Include="ExtLobbyDataListenerWhenMemberJoined.h" />
+    <ClInclude Include="ExtLobbyMessageListener.h" />
+    <ClInclude Include="ExtMemberStateListener.h" />
+    <ClInclude Include="ExtMemberUpdateListener.h" />
+    <ClInclude Include="ExtNetworking.h" />
+    <ClInclude Include="ExtNetworkingListener.h" />
     <ClInclude Include="ExtRegistrar.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IFailureReason.h" />
+    <ClInclude Include="IFriends.h" />
     <ClInclude Include="IGalaxyID.h" />
     <ClInclude Include="IGalaxyInitOptions.h" />
     <ClInclude Include="IGalaxyListener.h" />
     <ClInclude Include="IIDType.h" />
     <ClInclude Include="IListenerRegistrar.h" />
     <ClInclude Include="IListenerType.h" />
+    <ClInclude Include="ILobbyComparisonType.h" />
     <ClInclude Include="ILobbyCreatedListener.h" />
     <ClInclude Include="ILobbyCreateResult.h" />
+    <ClInclude Include="ILobbyDataListener.h" />
+    <ClInclude Include="ILobbyDataRetrieveListener.h" />
+    <ClInclude Include="ILobbyMemberDataUpdateListener.h" />
+    <ClInclude Include="ILobbyMemberStateChange.h" />
+    <ClInclude Include="ILobbyMemberStateListener.h" />
+    <ClInclude Include="ILobbyMessageListener.h" />
+    <ClInclude Include="ILobbyTopologyType.h" />
+    <ClInclude Include="ILobbyType.h" />
+    <ClInclude Include="IMatchmaking.h" />
+    <ClInclude Include="INetworking.h" />
+    <ClInclude Include="INetworkingListener.h" />
     <ClInclude Include="IPCCommucator.h" />
     <ClInclude Include="SHOOK.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="swbf.pb.h" />
+    <ClInclude Include="swbflogger.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExtLobbyCreatedListener.cpp" />
+    <ClCompile Include="ExtLobbyDataListener.cpp" />
+    <ClCompile Include="ExtLobbyDataListenerWhenMemberJoined.cpp" />
+    <ClCompile Include="ExtLobbyMessageListener.cpp" />
+    <ClCompile Include="ExtMemberStateListener.cpp" />
+    <ClCompile Include="ExtMemberUpdateListener.cpp" />
+    <ClCompile Include="ExtNetworking.cpp" />
+    <ClCompile Include="ExtNetworkingListener.cpp" />
     <ClCompile Include="ExtRegistrar.cpp" />
+    <ClCompile Include="IFailureReason.cpp" />
+    <ClCompile Include="IFriends.cpp" />
     <ClCompile Include="IGalaxyID.cpp" />
     <ClCompile Include="IGalaxyInitOptions.cpp" />
     <ClCompile Include="IGalaxyListener.cpp" />
     <ClCompile Include="IIDType.cpp" />
     <ClCompile Include="IListenerRegistrar.cpp" />
     <ClCompile Include="IListenerType.cpp" />
+    <ClCompile Include="ILobbyComparisonType.cpp" />
     <ClCompile Include="ILobbyCreatedListener.cpp" />
     <ClCompile Include="ILobbyCreateResult.cpp" />
+    <ClCompile Include="ILobbyDataListener.cpp" />
+    <ClCompile Include="ILobbyDataRetrieveListener.cpp" />
+    <ClCompile Include="ILobbyMemberDataUpdateListener.cpp" />
+    <ClCompile Include="ILobbyMemberStateChange.cpp" />
+    <ClCompile Include="ILobbyMemberStateListener.cpp" />
+    <ClCompile Include="ILobbyMessageListener.cpp" />
+    <ClCompile Include="ILobbyTopologyType.cpp" />
+    <ClCompile Include="ILobbyType.cpp" />
+    <ClCompile Include="IMatchmaking.cpp" />
+    <ClCompile Include="INetworking.cpp" />
+    <ClCompile Include="INetworkingListener.cpp" />
     <ClCompile Include="IPCCommucator.cpp" />
     <ClCompile Include="SHOOK.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="swbf.pb.cc" />
+    <ClCompile Include="swbflogger.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EasyHook32.dll" />
@@ -186,6 +230,12 @@
   <ItemGroup>
     <Library Include="EasyHook32.lib" />
     <Library Include="libprotobuf.lib" />
+    <Library Include="RakNet_VS2008_LibStatic_Release_Win32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Workers\Workers.vcxproj">
+      <Project>{72a9f060-f7f3-49f3-8535-ae1cd55b1650}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

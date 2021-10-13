@@ -1,0 +1,14 @@
+syntax = "proto2";
+package swbf;
+
+message lobby {
+    optional int64 LobbyId = 1;
+    optional string GameName = 2;
+    repeated lobbymember Members = 3;
+}
+
+message lobbymember {
+    optional int64 MemberID = 1;
+    optional int64 MemberRealID = 2;
+    optional string MemberName = 3;
+}

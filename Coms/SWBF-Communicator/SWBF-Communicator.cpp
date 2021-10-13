@@ -6,108 +6,38 @@
 #include <shlobj.h>
 #include <filesystem>
 
-#include <fstream>
-#include "swbf.pb.h"  
+#include <fstream> 
 #include <easyhook.h>
- 
+#include "../Lib/SWBFLogger/SWBFLogger.cpp"
+
 using namespace std; 
-std::vector<std::string> savedMessages;
-
-int dirExists(const char* path)
-{
-    struct stat info;
-
-    if (stat(path, &info) != 0)
-        return 0;
-    else if (info.st_mode & S_IFDIR)
-        return 1;
-    else
-        return 0;
-}
-
-string handleIPCPath(const char* ipcHandleName) {
-    CHAR my_documents[MAX_PATH];
-    HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-
-    if (result != S_OK)
-    std::cout << "Error: " << result << "\n";
-    else {
-        std::string path = std::string("C:\\ipc");
-        path = path.append("\\");
-        path = path.append("SWBF-ServerMgr");
-
-        if (!dirExists(path.c_str())) {
-            std::cout << "Creating directoy " << path << std::endl;
-            CreateDirectoryA(path.c_str(), NULL);
-        }
-
-        path = path.append("\\Data");
-
-        if (!dirExists(path.c_str())) {
-            std::cout << "Creating directoy " << path << std::endl;
-            CreateDirectoryA(path.c_str(), NULL);
-        }
-
-        std::cout << "Path completed. Creating IPC Headers and File...";
-        path = path.append("\\");
-        path = path.append(ipcHandleName);
-        path = path.append(".ipc-file");
-        return path;
-    }
-    return "";
-} 
-
-void ReadMessages(swbf::Interact interact) {
-     
-
-    for (int i = 0; i < interact.textmessages_size(); i++) {
-        string message = interact.textmessages(i);
-        if (std::find(savedMessages.begin(), savedMessages.end(), message) != savedMessages.end())
-            continue;
-        else
-        {
-            cout << "[IPC][INTERACT] " << message << endl;
-            savedMessages.push_back(message);
-        }
-         
-    } 
-} 
-
+SWBFLogger l;
+vector<int> savedMessages;
 void ClearIPC() {
     cout << "Clearing Interact IPC Buffer" << endl;
-    string interactPath = handleIPCPath("interact");
-
-    std::remove(interactPath.c_str());
+    l.Clear();
 }
 
 void HandleInteractionMessages() {
-
-    
-
-    string interactPath = handleIPCPath("interact");
-     
+   
 
     while (true)
     {
-         
-
-        swbf::Interact  interaction;
-        {
-            // Read the existing address book.
-            fstream input(interactPath, ios::in | ios::binary);
-            if (!input) {
-                cout << "No Messages so far..." << endl;
-
-                
-
-            }
-            else if (!interaction.ParseFromIstream(&input)) {
-                cerr << "Failed to parse address book." << endl;
-                return;
+        vector<swbf::LogMessage> messages = l.GetMessages();
+        for(swbf::LogMessage msg:messages) {
+            if (std::find(savedMessages.begin(), savedMessages.end(), msg.id()) != savedMessages.end())
+                continue;
+            else
+            {
+                cout << "[IPC][LOG][ " << msg.date() << "]" << msg.message() << endl;
+                savedMessages.push_back(msg.id());
             }
         }
 
-        ReadMessages(interaction);
+        if (l.GetMessageCount() > 1000) {
+            l.Clear();
+        }
+       
 
         Sleep(1000);
     }
@@ -116,24 +46,6 @@ void HandleInteractionMessages() {
 inline bool ex(const std::string& name) {
     struct stat buffer;
     return (stat(name.c_str(), &buffer) == 0);
-}
-
-void SetCompleteHook(BYTE head, DWORD offset, ...)
-{
-    DWORD OldProtect;
-
-    VirtualProtect((void*)offset, 5, PAGE_EXECUTE_READWRITE, &OldProtect);
-
-    if (head != 0xFF)
-    {
-        *(BYTE*)(offset) = head;
-    }
-
-    DWORD* function = &offset + 1;
-
-    *(DWORD*)(offset + 1) = (*function) - (offset + 5);
-
-    VirtualProtect((void*)offset, 5, OldProtect, &OldProtect);
 }
 
 std::wstring to_wide(const std::string& multi) {
@@ -202,7 +114,7 @@ int main(int argc, char** argv)
         wstring exeWS = to_wide(exePath);
         WCHAR* tt = (WCHAR*)exeWS.c_str();
         WCHAR* t2 = (WCHAR*)L"D:\\Steam\\steamapps\\common\\Star Wars Battlefront (Classic 2004)\\GameData\\Battlefront.exe";
-        WCHAR* t3 = (WCHAR*)L"/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename NoAI NoCP /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /spawn 5 bes2r 100 100 bes2a 100 100";
+        WCHAR* t3 = (WCHAR*)L"/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename NoAI NoCP /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /sideselect /password foora /spawn 5 bes2r 100 100 bes2a 100 100";
         cout << tt << endl;
  
 

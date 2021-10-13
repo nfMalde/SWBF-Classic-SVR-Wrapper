@@ -8,6 +8,6 @@ class ILobbyCreatedListener: public IGalaxyTypeAwareListener<IListenerType::LOBB
 public:
 	virtual ~ILobbyCreatedListener() {}
 
-	virtual void OnLobbyCreated(ISGalaxyId* lobbyID, ILobbyCreateResult result) = 0;
+	virtual void OnLobbyCreated(const ISGalaxyId& lobbyID, ILobbyCreateResult result) = 0;
 };
 

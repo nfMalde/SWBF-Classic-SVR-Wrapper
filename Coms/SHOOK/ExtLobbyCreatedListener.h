@@ -2,43 +2,51 @@
 #include "ILobbyCreatedListener.h"
 #include "IGalaxyID.h"
 #include "ILobbyCreatedListener.h"
-#include "IPCCommucator.h" 
+#include "IListenerRegistrar.h"
+#include "IListenerType.h"
+#include <format>
+#include "../Lib/SWBFLogger/SWBFLogger.cpp"
+#include "ExtMemberUpdateListener.h"
 namespace {
 	class ExtLobbyCreatedListener:public ILobbyCreatedListener
 	{
 	private:
-		IPCCom* com;
+		SWBFLogger* com;
+		IListenerRegistrar* registerer;
 	public:
-		ExtLobbyCreatedListener() {
-			com = new IPCCom();
+		ExtLobbyCreatedListener(IListenerRegistrar* reg) {
+			com = new SWBFLogger();
+			registerer = reg;
 		}
 
-		void OnLobbyCreated(ISGalaxyId* lobbyID, ILobbyCreateResult result) {
+		void OnLobbyCreated(const ISGalaxyId& lobbyID, ILobbyCreateResult result) {
 		 
-			 
-			com->sendMessage("Lobby Created!");
-			com->sendMessage("Trying to save lobby ID"); 
+		 
+
+
+			com->Write("Lobby Created!");
+			com->Write("Trying to save lobby ID");
 			if (lobbyID != NULL) {
 				 
-				uint64_t rID =	lobbyID->GetRealID();
+				uint64_t rID =	lobbyID.GetRealID();
 
 				if (rID > 0) {
-					com->sendMessage("Real ID found!");
+					com->Write("Real ID found!");
 				}
 
-				com->sendMessage("Now trying to ge the lobby id (UINT_64)...");
+				com->Write("Now trying to ge the lobby id (UINT_64)...");
 
-				uint64_t lID = lobbyID->ToUint64();
+				uint64_t lID = lobbyID.ToUint64();
 
 				if (lID > 0) {
-					com->sendMessage("Lobby ID is parsable and valid.");
+					com->Write("Lobby ID is parsable and valid.");
 
 					string msg = string("Lobby id=");
 					msg.append(to_string(lID));
 					msg.append("; Real ID=");
 					msg.append(to_string(rID));
 
-					com->sendMessage(msg);
+					com->Write(msg); 
 				}
 			}
 

@@ -144,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SWBF-Communicator.cpp" />
-    <ClCompile Include="swbf.pb.cc" />
+    <ClCompile Include="swbflogger.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EasyHook32.dll" />
@@ -258,7 +258,7 @@
     <ClInclude Include="install\include\google\protobuf\wire_format.h" />
     <ClInclude Include="install\include\google\protobuf\wire_format_lite.h" />
     <ClInclude Include="install\include\google\protobuf\wrappers.pb.h" />
-    <ClInclude Include="swbf.pb.h" />
+    <ClInclude Include="swbflogger.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="EasyHook32.lib" />

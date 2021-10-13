@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package swbf;
+
+message Logger {
+    repeated LogMessage LogMessages = 1;
+}
+
+message LogMessage {
+    required string Date = 1;
+    required int32 Id = 2;
+    required string Message = 3;
+}

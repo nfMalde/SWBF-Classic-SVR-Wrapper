@@ -4,3 +4,6 @@
 [submodule "Coms/Communicator/protobuf"]
 	path = Coms/Communicator/protobuf
 	url = https://github.com/protocolbuffers/protobuf.git
+[submodule "Coms/RakNet"]
+	path = Coms/RakNet
+	url = https://github.com/facebookarchive/RakNet.git
