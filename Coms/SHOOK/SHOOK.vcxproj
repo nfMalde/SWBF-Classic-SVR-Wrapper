@@ -76,7 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\protobuf\src;D:\Projects\SWBF-Classic-SVR-Wrapper\Coms\Libs;$(SolutionDir)Coms\RakNet\Source;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Coms\SWBF-Communicator\protobuf\src;$(SolutionDir)Coms\Libs;$(SolutionDir)Coms\RakNet\Source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

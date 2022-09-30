@@ -276,7 +276,7 @@ void _HOOK_Install_Galaxy_Networking() {
 
 void InstallGalaxyHook() {
 	_HOOK_Install_Galaxy_Init();
-	//_HOOK_Install_Galaxy_Networking();
+	_HOOK_Install_Galaxy_Networking();
 	//_HOOK_Install_Galaxy_ListenerRegistrar(); 
 
 }

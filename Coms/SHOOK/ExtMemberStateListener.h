@@ -46,15 +46,19 @@ public:
 			// IFriends here
 			string namstr = string("Name of player:<").append(name).append(">");
 			
-			logger->Write(namstr);
+			logger->Write(namstr); 
+		}
 
-			logger->Write("Lets find out some data...");
-			 
-			int c = matchmaking->GetLobbyMemberDataCount(lobbyID,memberID);
-			logger->Write("Member Data Count:");
-			logger->Write(to_string(c));
+		if (memberStateChange == ILobbyMemberStateChange::LOBBY_MEMBER_STATE_CHANGED_BANNED) {
+			string msg;
+			msg = msg.append("Member with ID <").append(to_string(memberID.GetRealID())).append("> banned.");
+			logger->Write(msg); // this is the new logger i made 
+		}
 
-		 
+		if (memberStateChange == ILobbyMemberStateChange::LOBBY_MEMBER_STATE_CHANGED_KICKED) {
+			string msg;
+			msg = msg.append("Member with ID <").append(to_string(memberID.GetRealID())).append("> kicked.");
+			logger->Write(msg); // this is the new logger i made 
 		}
 		
 		if (memberStateChange == ILobbyMemberStateChange::LOBBY_MEMBER_STATE_CHANGED_LEFT) {

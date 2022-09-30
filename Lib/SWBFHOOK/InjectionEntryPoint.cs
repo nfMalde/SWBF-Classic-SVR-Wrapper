@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using static SWBFHOOK.Interceptors.Delegates.NetworkingDelegates;
 using static SWBFHOOK.Interceptors.Delegates.ListenerRegistrarDelegates;
+using SWBFHOOK.Models;
 
 namespace SWBFHOOK
 {
@@ -67,44 +68,17 @@ namespace SWBFHOOK
                
                 
                 _server.ReportMessage("Installing Hooks...");
-                 
-                /**
-                IntPtr _dllhandle = IntPtr.Zero;
 
-                var galaxy = NativeLibrary.GetLibraryPathname("Galaxy.dll");
- 
-
-                _dllhandle = NativeLibrary.LoadLibrary("Galaxy.dll");
-
-                if (_dllhandle == IntPtr.Zero)
-                {
-                    throw new Exception("Module not found!!!");
-
-                }
-
-                var handle = NativeLibrary.GetProcAddress(_dllhandle, "?Matchmaking@api@galaxy@@YAPAVIMatchmaking@12@XZ");
-
-                // Apply thread
-
-                if (handle == IntPtr.Zero)
-                {
-                    throw new  Exception("Method not found!!!");
-                }
+             
+                _server.ReportMessage("Registering Hook: ::Init...");
+                var galaxy_init = EasyHook.LocalHook.GetProcAddress("Galaxy.dll", "?Init@api@galaxy@@YAXABUInitOptions@12@@Z");
+                _server.ReportMessage($"Found Init Function: {galaxy_init}");
+                var galaxy_init_hook = EasyHook.LocalHook.Create(galaxy_init, new DInit(Init_Hook), this);
+                _server.ReportMessage("Registering Hook: ::Init Completed");
+                galaxy_init_hook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
 
 
-           
-
-                **/
-
-                var sender = EasyHook.LocalHook.GetProcAddress("WS2_32.dll", "send");
-                _server.ReportMessage($"Found Sender: {sender}");
-                var sendhook = EasyHook.LocalHook.Create(sender, new Del_WS2_32_Send(WS2_32_Send_Hook), this);
-                _server.ReportMessage("Hook for sender installed...");
-                sendhook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-
-
-                _server.ReportMessage("Hooks installed");
-                _server.ReportMessage("Alying Command Listeners...");
+                _server.ReportMessage("Hooks installed"); 
                
                 _server.ReportMessage("Acitivating Process...");
 
@@ -112,79 +86,7 @@ namespace SWBFHOOK
 
                 try
                 {
-                    _server.ReportMessage("Trying to contact Networking Interface...");
-                    try
-                    {
-                        //_server.ReportMessage("Waiting for Network Interface to be ready...");
-
-                        //IntPtr n = IntPtr.Zero;
-
-                        //while (n == IntPtr.Zero)
-                        //{
-
-                        //    n = Networking();
-                        //    System.Threading.Thread.Sleep(2000);
-                        //}
-
-                        //_server.ReportMessage($"Network Interface is ready. {n}");
-                        //_server.ReportMessage($"Generating struct for Networking...");
-                        //IntPtr vtablePtr = Marshal.ReadIntPtr(n, 0);
-
-                        //Interceptors.Structs.NetworkingStruct nTable = Marshal.PtrToStructure<Interceptors.Structs.NetworkingStruct>(vtablePtr);
-
-                        //_server.ReportMessage("Follwing Networking Method Addresses were found:");
-                        //_server.ReportMessage($"SendP2PPacket={nTable.SendP2PPacket}");
-                        //_server.ReportMessage($"PeekP2PPacket={nTable.PeekP2PPacket}");
-                        //_server.ReportMessage($"IsP2PPacketAvailable={nTable.IsP2PPacketAvailable}");
-                        //_server.ReportMessage($"ReadP2PPacket={nTable.ReadP2PPacket}");
-                        //_server.ReportMessage($"PopP2PPacket={nTable.PopP2PPacket}");
-                        //_server.ReportMessage($"GetPingWith={nTable.GetPingWith}");
-
-                        //SendP2PPacketDelegate sendp2pD = Marshal.GetDelegateForFunctionPointer<SendP2PPacketDelegate>(nTable.SendP2PPacket);
-
-                        //_server.ReportMessage("Trying to reach out for ListenerRegistar to hook into network traffic...");
-
-                        //IntPtr tbRegistrar = IntPtr.Zero;
-
-                        //while (tbRegistrar == IntPtr.Zero)
-                        //{
-                        //    tbRegistrar = ListenerRegistrar();
-                        //}
-
-                        //_server.ReportMessage($"Listener Register found at address: {tbRegistrar}");
-                        //_server.ReportMessage("Generating struct...");
-
-                        //IntPtr vtableRegistrar = Marshal.ReadIntPtr(tbRegistrar, 0);
-
-
-                        //Interceptors.Structs.ListenerRegistrarStruct listenerRegistrarStruct = Marshal.PtrToStructure<Interceptors.Structs.ListenerRegistrarStruct>(vtableRegistrar);
-
-                        //_server.ReportMessage($"Struct generated with methods:");
-                        //_server.ReportMessage($"Register(*listenerType, *listener) = {listenerRegistrarStruct.Register}");
-                        //_server.ReportMessage($"Unregister(*listenerType, *listener) = {listenerRegistrarStruct.Unregister}");
-
-                        //_server.ReportMessage($"Registering delegates...");
-
-                        //RegisterDelegate regD = Marshal.GetDelegateForFunctionPointer<RegisterDelegate>(listenerRegistrarStruct.Register);
-                        //NetworkingListener l = new NetworkingListener(this.channelName);
-                        //IntPtr t = Marshal.AllocHGlobal(Marshal.SizeOf(ListenerType.NETWORKING));
-
-                        //Marshal.StructureToPtr(ListenerType.NETWORKING, t, false);
-
-                        //IntPtr lt = Marshal.AllocHGlobal(Marshal.SizeOf(l));
-                        //Marshal.StructureToPtr(l, lt, false);
-                        //_server.ReportMessage($"Converted to pointers: {t}, {lt}");
-
-                        //regD(t, lt);
-
-                        //_server.ReportMessage($"Delegate registered.");
-
-
-                    }
-                    catch (Exception ex)
-                    {
-                        _server.ReportException(ex);
-                    }
+                   
 
 
                     // Loop until FileMonitor closes (i.e. IPC fails)
@@ -241,27 +143,14 @@ namespace SWBFHOOK
 
         #region Imported Methods
        
-
-        [DllImport("Galaxy.dll",
-          CharSet = CharSet.Unicode,
-            EntryPoint = "?Matchmaking@api@galaxy@@YAPAVIMatchmaking@12@XZ",
-          SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr Matchmaking();
-
-        [DllImport("Galaxy.dll",
-         CharSet = CharSet.Unicode,
-           EntryPoint = "?Networking@api@galaxy@@YAPAVINetworking@12@XZ",
-         SetLastError = true, CallingConvention = CallingConvention.Cdecl)]  
-        static extern IntPtr Networking();
+         
 
         [DllImport("Galaxy.dll",
         CharSet = CharSet.Unicode,
-          EntryPoint = "?ListenerRegistrar@api@galaxy@@YAPAVIListenerRegistrar@12@XZ",
+          EntryPoint = "?Init@api@galaxy@@YAXABUInitOptions@12@@Z",
         SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr ListenerRegistrar();
-
-        [DllImportAttribute("ws2_32.dll", EntryPoint = "send", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        static extern IntPtr EXT_WS2_32_Send(uint s, byte[] buf, int len, int flags);
+        static extern void GalaxyOrigInit(GalaxyInitOptions initOptions);
+         
 
         #endregion
 
@@ -281,43 +170,21 @@ namespace SWBFHOOK
         [UnmanagedFunctionPointer(CallingConvention.Cdecl,
                     CharSet = CharSet.Unicode,
                     SetLastError = true)]
-        delegate IntPtr MatchmakingD();
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl,
-                    CharSet = CharSet.Unicode,
-                    SetLastError = true)]
-        delegate IntPtr NetworkingD();
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
-        delegate IntPtr Del_WS2_32_Send(uint s, byte[] buf, int len, int flags);
-
+        delegate void DInit([MarshalAs(UnmanagedType.Struct)] GalaxyInitOptions initOptions);
+        
+        
+        
         #endregion
 
         #region Method Hooks
- 
-        IntPtr Matchmaking_Hook()
+        void Init_Hook(GalaxyInitOptions initOptions)
         {
-            lock (this._messageQueue)
-            {
-                if (this._messageQueue.Count < 1000)
-                { 
-                    // Add message to send to FileMonitor
-                    //this._messageQueue.Enqueue($"P{EasyHook.RemoteHooking.GetCurrentProcessId()}/T{ EasyHook.RemoteHooking.GetCurrentThreadId()}: Intercepted Lobby Call");
-                }
-            }
+            string getClientId = Marshal.PtrToStringAnsi(initOptions.clientID);
 
-            return Matchmaking();
-        }
-
-
-        IntPtr WS2_32_Send_Hook(uint s, byte[] buf, int len, int flags)
-        {
-            string ss = System.Text.Encoding.UTF8.GetString(buf);
-
-            this._server.ReportMessage($"Sent Packet: S={s}//buf={buf.Length}=={ss}, len = {len}, flags={flags}");
-
-            return EXT_WS2_32_Send(s, buf, len, flags);
-        }
-         
+            _server.ReportMessage($"Init is called with params: clientID={getClientId}, secret=...");
+            _server.ReportMessage("Server Init complete. Registering listeners...");
+            GalaxyOrigInit(initOptions);
+        } 
 
         #endregion
     }

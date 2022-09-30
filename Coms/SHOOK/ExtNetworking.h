@@ -13,7 +13,12 @@ public:
 	}
 
     bool SendP2PPacket(ISGalaxyId galaxyID, const void* data, uint32_t dataSize, P2PSendType sendType, uint8_t channel = 0) {
-        
+        printf("%p\n", data);
+        char buffer[256];
+     
+        sprintf_s(buffer, "%p\n", data);
+        this->logger->Write(buffer);
+
         return orig->SendP2PPacket(galaxyID, data, dataSize, sendType, channel);
     };
 

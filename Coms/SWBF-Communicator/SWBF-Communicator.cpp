@@ -113,8 +113,8 @@ int main(int argc, char** argv)
         WCHAR* arg = (WCHAR*)wide_string2.c_str();
         wstring exeWS = to_wide(exePath);
         WCHAR* tt = (WCHAR*)exeWS.c_str();
-        WCHAR* t2 = (WCHAR*)L"D:\\Steam\\steamapps\\common\\Star Wars Battlefront (Classic 2004)\\GameData\\Battlefront.exe";
-        WCHAR* t3 = (WCHAR*)L"/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename NoAI NoCP /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /sideselect /password foora /spawn 5 bes2r 100 100 bes2a 100 100";
+        WCHAR* t2 = (WCHAR*)L"C:\\Gaming\\Steam\\steamapps\\common\\Star Wars Battlefront (Classic 2004)\\GameData\\Battlefront.exe";
+        WCHAR* t3 = (WCHAR*)L"/win /norender /noteamdamage /autonet dedicated /resolution 320 240 /nosound /noaim /tps 57 /gamename STEST /playerlimit 12 /playercount 0 /bots 0 /difficulty 1 /throttle 3072 /sideselect /password foora /spawn 5 bes2r 100 100 bes2a 100 100";
         cout << tt << endl;
  
 

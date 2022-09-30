@@ -73,11 +73,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\Users\Malte\source\repos\SWBF.CLASSIC-Server-Hook\Coms\SWBF-Communicator\install\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\Malte\source\repos\SWBF.CLASSIC-Server-Hook\packages\EasyHookNativePackage.2.7.7097\build\native\lib\Win32\v141\Debug</LibraryPath>
-    <IncludePath>D:\protobuf\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Coms\SWBF-Communicator\protobuf\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\protobuf\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Coms\SWBF-Communicator\protobuf\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

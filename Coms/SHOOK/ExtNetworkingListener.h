@@ -30,17 +30,7 @@ public:
 
 	// Geerbt über INetworkingListener
 	void OnP2PPacketAvailable(uint32_t msgSize, uint8_t channel) {
-		SWBFLogger* logger = new SWBFLogger();
-		logger->Write(std::string("OnP2PPacketAvailable").append(" with Message Size ").append(to_string(msgSize)));
-   
-		ISGalaxyId idBuff = ISGalaxyId();
-
-		logger->Write(std::string("Peeking messsage"));
-		char pack[1024];
- 
-		network->PeekP2PPacket(pack, sizeof(pack), &msgSize, idBuff, channel);
-		logger->Write(std::string("MSG Peeked!"));
-
+		 
 	};
 };
 
